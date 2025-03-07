@@ -48,9 +48,9 @@ export default function Education() {
       degree: "Patrones de Diseño: Soluciones prácticas y eficientes",
       institution: "DevTalles",
       location: "Online",
-      period: "2025",
-      description: "Completed an online course on React.js, covering the fundamentals of the library and advanced topics such as state management and hooks.",
-      courses: ["JavaScript", "React", "Hooks", "Redux", "HTML", "CSS", "Bootstrap", "Node.js", "MongoDB"],
+      period: "2025 - Present",
+      description: "Currently taking an online course on design patterns, focusing on the implementation of the most common design patterns in software development.",
+      courses: ["Design Patterns", "SOLID Principles", "Refactoring", "Testing", "Javascript", "Typescript"],
       logo: "/placeholder.svg?height=80&width=80",
     },
     {
