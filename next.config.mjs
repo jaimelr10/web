@@ -1,44 +1,21 @@
-let userConfig = undefined
+// The site is served by GitHub Pages at https://jaimelr10.github.io/web/.
+// If it moves to its own domain (e.g. jaimeleon.dev), set this to "".
+const basePath = process.env.NODE_ENV === "production" ? "/web" : ""
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
+  output: "export",
+  basePath,
+  env: {
+    // Exposed so plain <a href> links to files in /public get the same prefix.
+    NEXT_PUBLIC_BASE_PATH: basePath,
   },
   images: {
     unoptimized: true,
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/jaimelr10.github.io/' : '',
-  experimental: {
-    webpackBuildWorker: true,
-    parallelServerBuildTraces: true,
-    parallelServerCompiles: true,
+  eslint: {
+    ignoreDuringBuilds: true,
   },
-}
-
-mergeConfig(nextConfig, userConfig)
-
-function mergeConfig(nextConfig, userConfig) {
-  if (!userConfig) {
-    return
-  }
-
-  for (const key in userConfig) {
-    if (
-      typeof nextConfig[key] === 'object' &&
-      !Array.isArray(nextConfig[key])
-    ) {
-      nextConfig[key] = {
-        ...nextConfig[key],
-        ...userConfig[key],
-      }
-    } else {
-      nextConfig[key] = userConfig[key]
-    }
-  }
 }
 
 export default nextConfig

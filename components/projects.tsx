@@ -1,167 +1,132 @@
-"use client"
-
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
-import { ExternalLink, Github } from "lucide-react"
+import type React from "react"
+import Image, { type StaticImageData } from "next/image"
+import { Manrope } from "next/font/google"
+import Section from "@/components/section"
 import LiferayLogo from "../public/LiferayLogo.png"
-import GlobalSuiteLogo from "../public/GlobalSuiteLogo.jpg"
 import MarcadorDeChapas from "../public/MarcadorDeChapas.png"
-import WarBotApp from "../public/WarbotApp.png"
-import PortfolioWeb from "../public/portfolioWeb.png"
-import FinancialCalculator from "../public/financialCalculator.png"
+import NantiaIcon from "../public/nantia-icon.svg"
+import LiveEarningsIcon from "../public/LiveEarningsIcon.png"
+import UC3MLogo from "../public/UC3MLogo.png"
+import { THESIS_URL } from "@/lib/paths"
+
+// Nantia's own brand font, used only for its wordmark below.
+const manrope = Manrope({ subsets: ["latin"], weight: ["700"] })
+
+const NantiaLogo = (
+  <div className="flex h-full items-center justify-center gap-3">
+    <Image src={NantiaIcon} alt="" width={56} height={56} />
+    <span className={`${manrope.className} text-5xl tracking-tight text-[#0e1726]`}>
+      nantia
+      <span className="ml-1 inline-block h-[0.32em] w-[0.32em] rounded-full bg-[#2448d8]" />
+    </span>
+  </div>
+)
+
+// Same layout as the other app covers: icon next to the app name.
+const LiveEarningsLogo = (
+  <div className="flex h-full items-center justify-center gap-4">
+    <Image src={LiveEarningsIcon} alt="" width={64} height={64} className="rounded-xl" />
+    <span className="text-2xl font-semibold tracking-tight">Live Earnings</span>
+  </div>
+)
+
+interface ProjectLink {
+  label: string
+  href: string
+}
 
 interface Project {
   title: string
   description: string
-  image: any
+  image?: StaticImageData
+  cover?: React.ReactNode
   tags: string[]
-  demoUrl?: string
-  githubUrl?: string
+  links: ProjectLink[]
 }
+
+const projects: Project[] = [
+  {
+    title: "Nantia - Financial Calculator",
+    description:
+      "Personal finance calculators for Spain: net salary by region, mortgage, rent vs. buy, compound interest, FIRE and retirement. Inputs live in the URL, so a shared link opens with the same values. Every page is prerendered for SEO. Built with Claude Code as an AI pair programmer.",
+    cover: NantiaLogo,
+    tags: ["React", "TypeScript", "Vite", "Tailwind CSS", "Recharts", "Vitest", "Playwright", "Cloudflare", "Claude Code"],
+    links: [{ label: "Website", href: "https://nantia.jaimeleonro.workers.dev/" }],
+  },
+  {
+    title: "MSc thesis: cross-border wCBDC interoperability",
+    description:
+      "A model for interoperability between wholesale central bank digital currencies issued on different DLT networks, aimed at cross-border payments. Surveys the BIS Innovation Hub projects and proposes an architecture, methodology, timeline and budget.",
+    image: UC3MLogo,
+    tags: ["DLT", "wCBDC", "Cross-border payments", "PvP", "Market infrastructure"],
+    links: [{ label: "Read the thesis (PDF, Spanish)", href: THESIS_URL }],
+  },
+  {
+    title: "Liferay DXP",
+    description:
+      "240+ public pull requests to the open-source Liferay DXP platform since 2023, mostly on the Export/Import revamp, API Builder and the migration of tests to Playwright.",
+    image: LiferayLogo,
+    tags: ["Java", "REST / OpenAPI", "React", "JSP", "Playwright"],
+    links: [
+      {
+        label: "Pull requests",
+        href: "https://github.com/search?q=author%3Ajaimelr10+org%3Aliferay-headless+org%3Aliferay&type=pullrequests",
+      },
+      { label: "Website", href: "https://www.liferay.com/" },
+    ],
+  },
+  {
+    title: "Live Earnings",
+    description: "Android app to track your daily earnings in real time. Built with AI-assisted development.",
+    cover: LiveEarningsLogo,
+    tags: ["Android", "React Native"],
+    links: [
+      { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.jaimeleon.liveearningsapp" },
+    ],
+  },
+  {
+    title: "Marcador de Fútbol Chapas",
+    description: "Scoreboard app for bottlecap football. More than 975 downloads on Google Play.",
+    image: MarcadorDeChapas,
+    tags: ["Android", "React Native"],
+    links: [{ label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.marcadorchapas&hl=es" }],
+  },
+]
 
 export default function Projects() {
-  const projectsRef = useRef<HTMLDivElement>(null)
-
-  const projects: Project[] = [
-    {
-      title: "Liferay",
-      description: "Contributions to the open-source repo of the DXP Platform.",
-      image: LiferayLogo,
-      tags: ["Java", "JSP", "REST API Infrastructure", "React", "Playwright"],
-      demoUrl: "https://www.liferay.com/es/",
-      githubUrl: "https://github.com/jaimelr10/liferay-portal",
-    },
-    {
-      title: "Cronos",
-      description: "ETL infrastructure to process and analyze data from different sources and generate reports.",
-      image: GlobalSuiteLogo,
-      tags: ["React", "PHP", "Laravel", "MariaDB", "MongoDB", "AWS", "PowerBI"],
-    },
-    {
-      title: "Marcador de Fútbol Chapas",
-      description: "An useful scoreboard personalized for one of my hobbies, Bottlecap football, with more than 300 downloads on Google Play.",
-      image: MarcadorDeChapas,
-      tags: ["Android", "React Native"],
-      demoUrl: "https://play.google.com/store/apps/details?id=com.marcadorchapas&hl=es",
-    },
-    {
-      title: "WarBot App",
-      description: "A funny game to simulate a war between groups of friends using the Twitter API to post the results. Around 1.900 downloads on Google Play. (Discontinued due to the name)",
-      image: WarBotApp,
-      tags: ["Android", "Java", "Twitter API"],
-    },
-    {
-      title: "Portfolio Website",
-      description: "A responsive portfolio website with smooth animations using GSAP and React.",
-      image: PortfolioWeb,
-      tags: ["React", "GSAP", "Tailwind CSS", "TypeScript"],
-      demoUrl: "https://jaimelr10.github.io/",
-      githubUrl: "https://github.com/jaimelr10/jaimelr10.github.io",
-    },
-    {
-      title: "Financial Calculator",
-      description: "Useful financial calculator to process several financial metrics. In progress. 👷",
-      image: FinancialCalculator,
-      tags: ["Java", "SpringBoot", "REST APIs", "React", "Tailwind CSS", "TypeScript"],
-      demoUrl: "https://github.com/jaimelr10/FinancialCalculator",
-      githubUrl: "https://github.com/jaimelr10/FinancialCalculator",
-    },
-  ]
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger)
-
-    // Animate section title
-    gsap.fromTo(
-      ".projects-title",
-      { opacity: 0, y: 30 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: projectsRef.current,
-          start: "top 70%",
-        },
-      },
-    )
-
-    // Animate project cards
-    gsap.fromTo(
-      ".project-card",
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        stagger: 0.2,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".projects-grid",
-          start: "top 70%",
-        },
-      },
-    )
-  }, [])
-
   return (
-    <div ref={projectsRef} id="projects" className="section py-20 scroll-mt-20">
-      <h2 className="projects-title text-3xl md:text-4xl font-bold mb-4 text-center">
-        My <span className="text-primary">Projects</span>
-      </h2>
-      <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-        Here are some of my recent projects. Each one was built to solve a specific problem or explore new technologies.
-      </p>
-
-      <div className="projects-grid grid sm:grid-cols-2 gap-8">
-        {projects.map((project, index) => (
-          <Card key={index} className="project-card overflow-hidden">
-            <div className="relative h-48 overflow-hidden">
-              <Image
-                src={project.image || "/placeholder.svg"}
-                alt={project.title}
-                layout="fill"
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-              />
-            </div>
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-              <p className="text-muted-foreground mb-4">{project.description}</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {project.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary">
-                    {tag}
-                  </Badge>
+    <Section id="projects" label="Projects">
+      <ul className="grid gap-x-8 gap-y-12 sm:grid-cols-2">
+        {projects.map((project) => (
+          <li key={project.title}>
+            <div className="relative aspect-[2/1] overflow-hidden rounded-sm border bg-white">
+              {/* Images are wide wordmarks, so fit them whole instead of cropping */}
+              {project.cover ??
+                (project.image && (
+                  <Image
+                    src={project.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 640px) 400px, 100vw"
+                    className="object-contain p-6"
+                  />
                 ))}
-              </div>
-            </CardContent>
-            <CardFooter className="px-6 pb-6 pt-0 flex gap-4">
-              {
-                project.githubUrl &&
-                <Button variant="outline" size="sm" className="gap-2" asChild>
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                  <Github className="w-4 h-4" /> Code
-                </a>
-              </Button>
-              }
-              {
-                project.demoUrl &&
-                <Button size="sm" className="gap-2" asChild>
-                  <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="w-4 h-4" /> Live Demo
+            </div>
+            <h3 className="mt-4 font-semibold">{project.title}</h3>
+            <p className="mt-1 leading-relaxed text-muted-foreground">{project.description}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{project.tags.join(" · ")}</p>
+            {project.links.length > 0 && (
+              <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                {project.links.map((link) => (
+                  <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className="link">
+                    {link.label}
                   </a>
-                </Button>
-              }
-            </CardFooter>
-          </Card>
+                ))}
+              </p>
+            )}
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </Section>
   )
 }
-

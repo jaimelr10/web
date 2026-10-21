@@ -1,90 +1,81 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { gsap } from "gsap"
+import { useEffect, useState } from "react"
 import { Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { CV_URL } from "@/lib/paths"
+
+const links = [
+  { href: "#about", label: "About" },
+  { href: "#experience", label: "Experience" },
+  { href: "#projects", label: "Projects" },
+  { href: "#education", label: "Education" },
+  { href: "#contact", label: "Contact" },
+]
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    // Animate navbar on load
-    gsap.fromTo(".navbar", { y: -100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" })
-
-    // Handle scroll event to change navbar style
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true)
-      } else {
-        setScrolled(false)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
+    const handleScroll = () => setScrolled(window.scrollY > 8)
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-    if (!isMenuOpen) {
-      gsap.fromTo(".mobile-menu", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.3, stagger: 0.1 })
-    }
-  }
-
   return (
-    <nav
-      className={`navbar fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? "bg-background/80 backdrop-blur-md shadow-md py-2" : "bg-transparent py-4"
+    <header
+      className={`fixed inset-x-0 top-0 z-50 bg-background/95 backdrop-blur-sm transition-[border-color] ${
+        scrolled || isMenuOpen ? "border-b" : "border-b border-transparent"
       }`}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center">
-          <a href="#" className="text-2xl font-bold text-primary">
-            Jaime León <span className="text-foreground">- Software Engineer</span>
-          </a>
+      <nav className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
+        <a href="#" className="font-serif text-lg font-semibold">
+          Jaime León
+        </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
-            {["Home", "About", "Experience", "Education",  "Projects", "Contact"].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="text-foreground hover:text-primary transition-colors"
-              >
-                {item}
+        <ul className="hidden gap-7 text-sm text-muted-foreground md:flex">
+          {links.map((link) => (
+            <li key={link.href}>
+              <a href={link.href} className="transition-colors hover:text-foreground">
+                {link.label}
               </a>
-            ))}
-            {/*<Button>Resume</Button>*/}
-          </div>
+            </li>
+          ))}
+          <li>
+            <a href={CV_URL} download className="font-medium text-foreground link">
+              CV
+            </a>
+          </li>
+        </ul>
 
-          {/* Mobile Navigation Toggle */}
-          <div className="md:hidden">
-            <Button variant="ghost" size="icon" onClick={toggleMenu}>
-              {isMenuOpen ? <X /> : <Menu />}
-            </Button>
-          </div>
-        </div>
+        <button
+          type="button"
+          className="-mr-2 p-2 md:hidden"
+          onClick={() => setIsMenuOpen((open) => !open)}
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMenuOpen}
+        >
+          {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </nav>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden pt-4 pb-2">
-            {["Home", "About", "Experience", "Education", "Skills", "Projects", "Contact"].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="mobile-menu block py-2 text-foreground hover:text-primary transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item}
+      {isMenuOpen && (
+        <ul className="mx-auto max-w-5xl px-6 pb-4 md:hidden">
+          {links.map((link) => (
+            <li key={link.href}>
+              <a href={link.href} className="block py-2" onClick={() => setIsMenuOpen(false)}>
+                {link.label}
               </a>
-            ))}
-            {/* <Button className="mobile-menu mt-2 w-full">Resume</Button> */}
-          </div>
-        )}
-      </div>
-    </nav>
+            </li>
+          ))}
+          <li>
+            <a href={CV_URL} download className="block py-2 font-medium">
+              Download CV
+            </a>
+          </li>
+        </ul>
+      )}
+    </header>
   )
 }
-

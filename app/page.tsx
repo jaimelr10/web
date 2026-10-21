@@ -1,66 +1,51 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Hero from "@/components/hero"
 import About from "@/components/about"
-import Skills from "@/components/skills"
 import Projects from "@/components/projects"
 import Contact from "@/components/contact"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
-import Education from "@/components/eduaction"
+import Education from "@/components/education"
 import Experience from "@/components/experience"
 
 export default function Home() {
-  const mainRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
-    // Register ScrollTrigger plugin
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
     gsap.registerPlugin(ScrollTrigger)
 
-    // Initialize smooth scrolling and animations
-    const sections = gsap.utils.toArray<HTMLElement>(".section")
-
-    sections.forEach((section) => {
-      gsap.fromTo(
-        section,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          scrollTrigger: {
-            trigger: section,
-            start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play none none reverse"
-          },
-        },
-      )
+    // One quiet fade per section, played once.
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
+        gsap.from(el, {
+          opacity: 0,
+          y: 16,
+          duration: 0.6,
+          ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        })
+      })
     })
 
-    return () => {
-      // Clean up ScrollTrigger when component unmounts
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
+    return () => ctx.revert()
   }, [])
 
   return (
-    <main ref={mainRef} className="min-h-screen bg-background">
+    <>
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
+      <main className="mx-auto max-w-5xl px-6">
         <Hero />
         <About />
         <Experience />
-        <Education />
-        {/* <Skills /> */}
         <Projects />
+        <Education />
         <Contact />
-      </div>
+      </main>
       <Footer />
-    </main>
+    </>
   )
 }
-
