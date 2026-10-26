@@ -6,8 +6,6 @@ import LiferayLogo from "../public/LiferayLogo.png"
 import MarcadorDeChapas from "../public/MarcadorDeChapas.png"
 import NantiaIcon from "../public/nantia-icon.svg"
 import LiveEarningsIcon from "../public/LiveEarningsIcon.png"
-import UC3MLogo from "../public/UC3MLogo.png"
-import { THESIS_URL } from "@/lib/paths"
 
 // Nantia's own brand font, used only for its wordmark below.
 const manrope = Manrope({ subsets: ["latin"], weight: ["700"] })
@@ -52,14 +50,6 @@ const projects: Project[] = [
     cover: NantiaLogo,
     tags: ["React", "TypeScript", "Vite", "Tailwind CSS", "Recharts", "Vitest", "Playwright", "Cloudflare", "Claude Code"],
     links: [{ label: "Website", href: "https://nantia.jaimeleonro.workers.dev/" }],
-  },
-  {
-    title: "MSc thesis: cross-border wCBDC interoperability",
-    description:
-      "A model for interoperability between wholesale central bank digital currencies issued on different DLT networks, aimed at cross-border payments. Surveys the BIS Innovation Hub projects and proposes an architecture, methodology, timeline and budget.",
-    image: UC3MLogo,
-    tags: ["DLT", "wCBDC", "Cross-border payments", "PvP", "Market infrastructure"],
-    links: [{ label: "Read the thesis (PDF, Spanish)", href: THESIS_URL }],
   },
   {
     title: "Liferay DXP",

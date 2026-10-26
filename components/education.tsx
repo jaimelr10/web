@@ -1,4 +1,5 @@
 import Section from "@/components/section"
+import { BSC_THESIS_URL, MSC_THESIS_URL } from "@/lib/paths"
 
 interface Degree {
   title: string
@@ -6,6 +7,13 @@ interface Degree {
   location: string
   period: string
   points: string[]
+  thesis?: Thesis
+}
+
+interface Thesis {
+  title: string
+  summary: string
+  href: string
 }
 
 interface Course {
@@ -26,8 +34,13 @@ const degrees: Degree[] = [
       "Risk management: sensitivity analysis (Greeks), Value-at-Risk, Expected Shortfall and model backtesting.",
       "Market infrastructure: electronic trading, clearing and settlement, payment systems and digital assets.",
       "Data, ML and blockchain: Big Data (Hadoop, MapReduce), machine learning in finance and smart contracts (eIDAS).",
-      "Thesis: an interoperability model for wholesale CBDCs across heterogeneous central-bank DLT networks, for cross-border payments.",
     ],
+    thesis: {
+      title: "Interoperability model for wholesale CBDCs across central banks",
+      summary:
+        "A model for cross-border payments between wholesale CBDCs issued on different DLT networks. Surveys the BIS Innovation Hub projects and proposes an architecture, methodology, timeline and budget.",
+      href: MSC_THESIS_URL,
+    },
   },
   {
     title: "BSc in Computer Science (Software Engineering)",
@@ -35,8 +48,14 @@ const degrees: Degree[] = [
     location: "Ciudad Real, Spain",
     period: "Sep 2017 – Jul 2022",
     points: [
-      "Bilingual (English) degree focused on software quality and engineering. Graduated with distinction; final thesis graded 9.0/10.",
+      "Bilingual (English) degree focused on software quality and engineering. Final thesis graded 9.0/10.",
     ],
+    thesis: {
+      title: "Cronos: a system to process, store, present and analyse historical data",
+      summary:
+        "Built at GlobalSuite to add a time dimension to an internal dashboard. A PHP API periodically pulls and cleans data from MariaDB and MongoDB into a MongoDB cluster, shown through 37 MongoDB Charts in a React web app.",
+      href: BSC_THESIS_URL,
+    },
   },
 ]
 
@@ -65,6 +84,16 @@ export default function Education() {
                 <li key={point}>{point}</li>
               ))}
             </ul>
+            {degree.thesis && (
+              <div className="mt-4 max-w-2xl border-l-2 pl-4">
+                <p className="text-sm text-muted-foreground">Thesis</p>
+                <p className="font-medium">{degree.thesis.title}</p>
+                <p className="mt-1 leading-relaxed text-muted-foreground">{degree.thesis.summary}</p>
+                <a href={degree.thesis.href} target="_blank" rel="noopener noreferrer" className="link mt-2 inline-block text-sm">
+                  Read the thesis (PDF, Spanish)
+                </a>
+              </div>
+            )}
           </div>
         ))}
       </div>
